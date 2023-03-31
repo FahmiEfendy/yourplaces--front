@@ -3,11 +3,15 @@ import "./UserList.css";
 
 const UserList = (props) => {
   if (props.items.length === 0) {
-    return <div className="center">No User Found!</div>;
+    return (
+      <div className="center">
+        <h2>No User Found!</h2>
+      </div>
+    );
   }
 
   return (
-    <ul>
+    <ul className="users-list">
       {props.items.map((user) => {
         return (
           <UserItem
