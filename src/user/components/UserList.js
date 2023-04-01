@@ -1,6 +1,6 @@
 import "./UserList.css";
 import UserItem from "./UserItem";
-import Card from "../../shared/components/UIElements/Card/Card";
+import Card from "../../shared/components/UIElements/Card";
 
 const UserList = (props) => {
   if (props.items.length === 0) {
