@@ -16,8 +16,8 @@ function App() {
       <MainNavigation></MainNavigation>
       <main>
         <Routes>
-          <Route path="/" exact element={<Users />}></Route>
-          <Route path="/:userId/places" exact element={<UserPlace />}></Route>
+          <Route path="/" exact element={<Users />} />
+          <Route path="/:userId/places" exact element={<UserPlace />} />
           <Route path="/place/new" exact element={<NewPlace />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
