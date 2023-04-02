@@ -13,7 +13,7 @@ const UserPlace = () => {
         "https://img.okezone.com/content/2022/02/04/337/2542154/mengenal-raja-yang-meratakan-puncak-bukit-demi-membangun-candi-borobudur-thVuwzm6PE.jpg",
       address:
         "Jl. Badrawati, Kw. Borobudur Temple, Borobudur, Kec. Borobudur, Magelang Regency, Central Java",
-      coordinate: {
+      coordinates: {
         lat: -7.6060136,
         lng: 110.1984,
       },
@@ -28,7 +28,7 @@ const UserPlace = () => {
         "https://duitologi.com/media/5ZNKKORS9CTWC6NL1O3U74AXK7QT191G00NJNSNXQUKFVRJVSGPSUD9MNZD9RC4N.jpg.1250x660_q85.jpg",
       address:
         "RT.5/RW.2, Gambir, Gambir District, Central Jakarta City, Special Capital Region of Jakarta 10110",
-      coordinate: {
+      coordinates: {
         lat: -6.1753871,
         lng: 106.8249588,
       },
