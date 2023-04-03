@@ -1,3 +1,5 @@
+import { useState } from "react";
+
 import "./Auth.css";
 import useForm from "../../shared/hooks/form-hook";
 import Card from "../../shared/components/UIElements/Card";
@@ -10,7 +12,9 @@ import {
 } from "../../shared/utils/validators";
 
 const Auth = () => {
-  const [formState, inputChangeHandler] = useForm(
+  const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const [formState, inputChangeHandler, setFormData] = useForm(
     {
       email: {
         value: "",
@@ -24,6 +28,22 @@ const Auth = () => {
     false
   );
 
+  const toggleLoginModeHandler = () => {
+    if (!isLoginMode) {
+      setFormData(
+        { ...formState.inputs, name: undefined },
+        formState.inputs.email.isValid && formState.inputs.password.isValid
+      );
+    } else {
+      setFormData(
+        { ...formState.inputs, name: { value: "", isValid: false } },
+        false
+      );
+    }
+
+    setIsLoginMode((prevState) => !prevState);
+  };
+
   const formSubmitHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs); // TODO: Send data to back-end later
@@ -31,9 +51,19 @@ const Auth = () => {
 
   return (
     <Card className="authentication">
-      <h2>Login Required</h2>
+      <h2>{`${isLoginMode ? "Login" : "SignUp"} Mode`}</h2>
       <hr />
       <form onSubmit={formSubmitHandler}>
+        {!isLoginMode && (
+          <Input
+            id="name"
+            type="text"
+            label="Name"
+            errorText="Please enter a valid name!"
+            validators={[VALIDATOR_REQUIRE]}
+            onInput={inputChangeHandler}
+          ></Input>
+        )}
         <Input
           id="email"
           type="email"
@@ -51,9 +81,12 @@ const Auth = () => {
           onInput={inputChangeHandler}
         />
         <Button type="submit" disabled={!formState.isValid}>
-          LOGIN
+          {`${isLoginMode ? "LOGIN" : "SIGN UP"}`}
         </Button>
       </form>
+      <Button inverse onClick={toggleLoginModeHandler}>
+        {`SWITCH TO ${isLoginMode ? "SIGN UP" : "LOGIN"}`}
+      </Button>
     </Card>
   );
 };
