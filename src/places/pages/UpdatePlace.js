@@ -45,15 +45,17 @@ const DUMMY_PLACES = [
 const UpdatePlace = () => {
   const { placeId } = useParams();
 
+  const selectedPlace = DUMMY_PLACES.find((place) => place.id === placeId);
+
   const [formState, inputChangeHandler] = useForm(
     {
       title: {
-        value: "",
-        isValid: false,
+        value: selectedPlace.title,
+        isValid: true,
       },
       description: {
-        value: "",
-        isValid: false,
+        value: selectedPlace.description,
+        isValid: true,
       },
     },
     true
@@ -64,8 +66,6 @@ const UpdatePlace = () => {
     console.log(formState.inputs); // TODO: Send data to back-end later
   };
 
-  const selectedPlace = DUMMY_PLACES.find((place) => place.id === placeId);
-
   return selectedPlace ? (
     <form className="place-form" onSubmit={formSubmitHandler}>
       <Input
@@ -75,8 +75,8 @@ const UpdatePlace = () => {
         errorText="Please enter a valid title!"
         validators={[VALIDATOR_REQUIRE()]}
         onInput={inputChangeHandler}
-        value={formState.inputs.title.value}
-        valid={formState.inputs.title.isValid}
+        initialValue={formState.inputs.title.value}
+        initialIsValid={formState.inputs.title.isValid}
       />
       <Input
         id="description"
@@ -86,8 +86,8 @@ const UpdatePlace = () => {
         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
         rows={3}
         onInput={inputChangeHandler}
-        value={formState.inputs.description.value}
-        valid={formState.inputs.description.isValid}
+        initialValue={formState.inputs.description.value}
+        initialIsValid={formState.inputs.description.isValid}
       />
       <Button type="submit" disabled={!formState.isValid}>
         UPDATE PLACE
