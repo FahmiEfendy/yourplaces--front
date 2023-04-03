@@ -56,19 +56,19 @@ const Input = (props) => {
       }`}
     >
       <label htmlFor={props.id}>{props.label}</label>
-      {props.type === "text" ? (
-        <input
-          type={props.type}
+      {props.type === "textarea" ? (
+        <textarea
           id={props.id}
-          placeholder={props.placeholder}
+          rows={props.rows || 3}
           value={inputState.value}
           onChange={inputChangeHandler}
           onBlur={inputTouchHandler}
         />
       ) : (
-        <textarea
+        <input
+          type={props.type}
           id={props.id}
-          rows={props.rows || 3}
+          placeholder={props.placeholder}
           value={inputState.value}
           onChange={inputChangeHandler}
           onBlur={inputTouchHandler}
