@@ -8,10 +8,17 @@ import Button from "../../shared/components/FormElements/Button";
 
 const PlaceItem = (props) => {
   const [isMapOpen, setIsMapOpen] = useState(false);
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
   const openMapHandler = () => setIsMapOpen(true);
 
   const closeMapHandler = () => setIsMapOpen(false);
+
+  const openDeleteModalHandler = () => setIsDeleteModalOpen(true);
+
+  const closeDeleteModalHandler = () => setIsDeleteModalOpen(false);
+
+  const confirmDeleteHandler = () => console.log("DELETED!!!");
 
   return (
     <React.Fragment>
@@ -26,6 +33,26 @@ const PlaceItem = (props) => {
         <div className="map-container">
           <Map center={props.coordinates} zoom={16} />
         </div>
+      </Modal>
+      <Modal
+        show={isDeleteModalOpen}
+        header="Are you sure want to delete this place?"
+        footerClass="place-item__modal-actions"
+        footer={
+          <React.Fragment>
+            <Button inverse onClick={closeDeleteModalHandler}>
+              CANCEL
+            </Button>
+            <Button danger onClick={confirmDeleteHandler}>
+              DELETE
+            </Button>
+          </React.Fragment>
+        }
+      >
+        <p>
+          Do you want to proceed to delete this place? Please note that this
+          cant be undone thereafter!
+        </p>
       </Modal>
       <li className="place-item">
         <Card>
@@ -42,7 +69,9 @@ const PlaceItem = (props) => {
               VIEW ON MAP
             </Button>
             <Button to={`/place/${props.id}`}>EDIT</Button>
-            <Button danger>DELETE</Button>
+            <Button danger onClick={openDeleteModalHandler}>
+              DELETE
+            </Button>
           </div>
         </Card>
       </li>
