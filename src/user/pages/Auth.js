@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import "./Auth.css";
 import useForm from "../../shared/hooks/form-hook";
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
+import { AuthContext } from "../../shared/context/auth-context";
 import Button from "../../shared/components/FormElements/Button";
 import {
   VALIDATOR_EMAIL,
@@ -13,6 +14,8 @@ import {
 
 const Auth = () => {
   const [isLoginMode, setIsLoginMode] = useState(true);
+
+  const auth = useContext(AuthContext);
 
   const [formState, inputChangeHandler, setFormData] = useForm(
     {
@@ -47,6 +50,7 @@ const Auth = () => {
   const formSubmitHandler = (event) => {
     event.preventDefault();
     console.log(formState.inputs); // TODO: Send data to back-end later
+    auth.login();
   };
 
   return (
