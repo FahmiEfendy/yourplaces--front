@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 
 import "./PlaceForm.css";
 import useForm from "../../shared/hooks/form-hook";
+import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import {
@@ -115,14 +116,14 @@ const UpdatePlace = () => {
         </Button>
       </form>
     ) : (
-      <div className="center">
+      <Card className="center">
         <h2>Loading...</h2>
-      </div>
+      </Card>
     )
   ) : (
-    <div className="center">
+    <Card className="center">
       <h2>No Place Found!</h2>
-    </div>
+    </Card>
   );
 };
 
