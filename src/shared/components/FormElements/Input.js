@@ -25,8 +25,8 @@ const Input = (props) => {
   const { onInput, id } = props;
 
   const [inputState, dispatch] = useReducer(inputReducer, {
-    value: "",
-    isValid: false,
+    value: props.value || "",
+    isValid: props.isValid || false,
     isTouched: false,
   });
 
@@ -56,7 +56,7 @@ const Input = (props) => {
       }`}
     >
       <label htmlFor={props.id}>{props.label}</label>
-      {props.type ? (
+      {props.type === "text" ? (
         <input
           type={props.type}
           id={props.id}

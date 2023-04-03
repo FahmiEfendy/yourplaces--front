@@ -1,5 +1,6 @@
 import { useParams } from "react-router-dom";
 
+import "./PlaceForm.css";
 import Input from "../../shared/components/FormElements/Input";
 import Button from "../../shared/components/FormElements/Button";
 import {
@@ -46,7 +47,7 @@ const UpdatePlace = () => {
   const selectedPlace = DUMMY_PLACES.find((place) => place.id === placeId);
 
   return selectedPlace ? (
-    <form>
+    <form className="place-form">
       <Input
         id="title"
         type="text"
@@ -63,6 +64,7 @@ const UpdatePlace = () => {
         label="Description"
         errorText="Please enter a valid description (at least 5 characters)!"
         validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+        rows={3}
         onInput={() => {}}
         value={selectedPlace.description}
         valid={true}
