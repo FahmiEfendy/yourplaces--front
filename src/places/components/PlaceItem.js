@@ -2,16 +2,21 @@ import React, { useContext, useState } from "react";
 
 import "./PlaceItem.css";
 import Map from "../../shared/components/UIElements/Map";
+import useHttpRequest from "../../shared/hooks/http-hook";
 import Card from "../../shared/components/UIElements/Card";
 import Modal from "../../shared/components/UIElements/Modal";
 import { AuthContext } from "../../shared/context/auth-context";
 import Button from "../../shared/components/FormElements/Button";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const PlaceItem = (props) => {
+  const auth = useContext(AuthContext);
+
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
 
-  const auth = useContext(AuthContext);
+  const { isLoading, error, sendRequest, clearErrorHandler } = useHttpRequest();
 
   const openMapHandler = () => setIsMapOpen(true);
 
@@ -21,7 +26,20 @@ const PlaceItem = (props) => {
 
   const closeDeleteModalHandler = () => setIsDeleteModalOpen(false);
 
-  const confirmDeleteHandler = () => console.log("DELETED!!!");
+  const confirmDeleteHandler = async () => {
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${props.id}`,
+        "DELETE"
+      );
+
+      props.onDelete(props.id);
+    } catch (err) {
+      console.log(err);
+    }
+
+    closeDeleteModalHandler();
+  };
 
   return (
     <React.Fragment>
@@ -43,6 +61,7 @@ const PlaceItem = (props) => {
         footerClass="place-item__modal-actions"
         footer={
           <React.Fragment>
+            {isLoading && <LoadingSpinner asOverlay />}
             <Button inverse onClick={closeDeleteModalHandler}>
               CANCEL
             </Button>
@@ -58,7 +77,7 @@ const PlaceItem = (props) => {
         </p>
       </Modal>
       <li className="place-item">
-        <Card>
+        <Card className="place-item__content">
           <div className="place-item__image">
             <img src={props.imageUrl} alt="props.title" />
           </div>
@@ -82,6 +101,8 @@ const PlaceItem = (props) => {
           </div>
         </Card>
       </li>
+
+      <ErrorModal error={error} onClear={clearErrorHandler} />
     </React.Fragment>
   );
 };

@@ -11,6 +11,14 @@ const UserPlace = () => {
   const [userPlaces, setUserPlaces] = useState([]);
   const { isLoading, error, sendRequest, clearErrorHandler } = useHttpRequest();
 
+  const updatePlaceListHandler = (deletedPlaceId) => {
+    setUserPlaces((prevUserPlaces) =>
+      prevUserPlaces.filter(
+        (prevUserPlace) => prevUserPlace.id !== deletedPlaceId
+      )
+    );
+  };
+
   useEffect(() => {
     const fetchRequest = async () => {
       try {
@@ -27,8 +35,6 @@ const UserPlace = () => {
     fetchRequest();
   }, [sendRequest, userId]);
 
-  console.log(userPlaces);
-
   return (
     <React.Fragment>
       {isLoading ? (
@@ -36,7 +42,7 @@ const UserPlace = () => {
           <LoadingSpinner asOverlay />
         </div>
       ) : (
-        <PlaceList items={userPlaces} />
+        <PlaceList items={userPlaces} onDelete={updatePlaceListHandler} />
       )}
       <ErrorModal error={error} onClear={clearErrorHandler} />
     </React.Fragment>
