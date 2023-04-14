@@ -119,7 +119,12 @@ const Auth = () => {
                 validators={[VALIDATOR_REQUIRE]}
                 onInput={inputChangeHandler}
               />
-              <ImageUpload center id="image" onInput={inputChangeHandler} />
+              <ImageUpload
+                center
+                id="image"
+                onInput={inputChangeHandler}
+                errorText="Please upload an image."
+              />
             </React.Fragment>
           )}
           <Input

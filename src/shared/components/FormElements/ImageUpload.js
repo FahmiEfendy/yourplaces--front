@@ -54,11 +54,11 @@ const ImageUpload = (props) => {
           {previewFile ? (
             <img src={previewFile} alt="Preview" />
           ) : (
-            <p>Please pick a profile picture.</p>
+            <p>Please upload an image.</p>
           )}
         </div>
         <Button type="button" onClick={imagePickerHandler}>
-          Upload Profile Picture
+          Upload Image
         </Button>
       </div>
 
