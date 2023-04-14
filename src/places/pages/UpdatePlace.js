@@ -1,55 +1,30 @@
-import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
+import React, { useContext, useEffect, useState } from "react";
 
 import "./PlaceForm.css";
 import useForm from "../../shared/hooks/form-hook";
+import useHttpRequest from "../../shared/hooks/http-hook";
 import Card from "../../shared/components/UIElements/Card";
 import Input from "../../shared/components/FormElements/Input";
+import { AuthContext } from "../../shared/context/auth-context";
 import Button from "../../shared/components/FormElements/Button";
+import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_MINLENGTH,
   VALIDATOR_REQUIRE,
 } from "../../shared/utils/validators";
 
-const DUMMY_PLACES = [
-  {
-    id: "p1",
-    title: "Borobudur",
-    description:
-      "Borobudur is a 9th-century Mahayana Buddhist temple in Magelang Regency, not far from the city of Magelang and the town of Muntilan, in Central Java, Indonesia",
-    imageUrl:
-      "https://img.okezone.com/content/2022/02/04/337/2542154/mengenal-raja-yang-meratakan-puncak-bukit-demi-membangun-candi-borobudur-thVuwzm6PE.jpg",
-    address:
-      "Jl. Badrawati, Kw. Borobudur Temple, Borobudur, Kec. Borobudur, Magelang Regency, Central Java",
-    coordinates: {
-      lat: -7.6060136,
-      lng: 110.1984,
-    },
-    creator: "u1",
-  },
-  {
-    id: "p2",
-    title: "National Monument",
-    description:
-      "The National Monument is a 132 m (433 ft) obelisk in the centre of Merdeka Square, Central Jakarta, symbolizing the fight for Indonesia",
-    imageUrl:
-      "https://duitologi.com/media/5ZNKKORS9CTWC6NL1O3U74AXK7QT191G00NJNSNXQUKFVRJVSGPSUD9MNZD9RC4N.jpg.1250x660_q85.jpg",
-    address:
-      "RT.5/RW.2, Gambir, Gambir District, Central Jakarta City, Special Capital Region of Jakarta 10110",
-    coordinates: {
-      lat: -6.1753871,
-      lng: 106.8249588,
-    },
-    creator: "u2",
-  },
-];
-
 const UpdatePlace = () => {
+  const navigate = useNavigate();
+
   const { placeId } = useParams();
 
-  const [isLoading, setIsLoading] = useState(true);
+  const auth = useContext(AuthContext);
 
-  const selectedPlace = DUMMY_PLACES.find((place) => place.id === placeId);
+  const [selectedPlace, setSelectedPlace] = useState();
+
+  const { isLoading, error, sendRequest, clearErrorHandler } = useHttpRequest();
 
   const [formState, inputChangeHandler, setFormData] = useForm(
     {
@@ -65,59 +40,92 @@ const UpdatePlace = () => {
     false
   );
 
+  // GET Place Detail
   useEffect(() => {
-    setFormData(
-      {
-        title: {
-          value: selectedPlace.title,
-          isValid: true,
-        },
-        description: {
-          value: selectedPlace.description,
-          isValid: true,
-        },
-      },
-      true
-    );
-    setIsLoading(false);
-  }, [selectedPlace.description, selectedPlace.title, setFormData]);
+    const fetchRequest = async () => {
+      try {
+        const responseData = await sendRequest(
+          `http://localhost:5000/api/places/${placeId}`
+        );
 
-  const formSubmitHandler = (event) => {
+        setSelectedPlace(responseData.data);
+
+        setFormData(
+          {
+            title: {
+              value: responseData.data.title,
+              isValid: true,
+            },
+            description: {
+              value: responseData.data.description,
+              isValid: true,
+            },
+          },
+          true
+        );
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchRequest();
+  }, [placeId, sendRequest, setFormData]);
+
+  // Send Updated Place to Database
+  const formSubmitHandler = async (event) => {
     event.preventDefault();
-    console.log(formState.inputs); // TODO: Send data to back-end later
+
+    try {
+      await sendRequest(
+        `http://localhost:5000/api/places/${placeId}`,
+        "PATCH",
+        { "Content-Type": "application/json" },
+        JSON.stringify({
+          title: formState.inputs.title.value,
+          description: formState.inputs.description.value,
+        })
+      );
+
+      navigate(`/${auth.userId}/places`);
+    } catch (err) {
+      console.log(err);
+    }
   };
 
-  return selectedPlace ? (
+  return selectedPlace && !error ? (
     !isLoading ? (
-      <form className="place-form" onSubmit={formSubmitHandler}>
-        <Input
-          id="title"
-          type="text"
-          label="Title"
-          errorText="Please enter a valid title!"
-          validators={[VALIDATOR_REQUIRE()]}
-          onInput={inputChangeHandler}
-          initialValue={formState.inputs.title.value}
-          initialIsValid={formState.inputs.title.isValid}
-        />
-        <Input
-          id="description"
-          type="textarea"
-          label="Description"
-          errorText="Please enter a valid description (at least 5 characters)!"
-          validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
-          rows={3}
-          onInput={inputChangeHandler}
-          initialValue={formState.inputs.description.value}
-          initialIsValid={formState.inputs.description.isValid}
-        />
-        <Button type="submit" disabled={!formState.isValid}>
-          UPDATE PLACE
-        </Button>
-      </form>
+      <React.Fragment>
+        <form className="place-form" onSubmit={formSubmitHandler}>
+          <Input
+            id="title"
+            type="text"
+            label="Title"
+            errorText="Please enter a valid title!"
+            validators={[VALIDATOR_REQUIRE()]}
+            onInput={inputChangeHandler}
+            initialValue={formState.inputs.title.value}
+            initialIsValid={formState.inputs.title.isValid}
+          />
+          <Input
+            id="description"
+            type="textarea"
+            label="Description"
+            errorText="Please enter a valid description (at least 5 characters)!"
+            validators={[VALIDATOR_REQUIRE(), VALIDATOR_MINLENGTH(5)]}
+            rows={3}
+            onInput={inputChangeHandler}
+            initialValue={formState.inputs.description.value}
+            initialIsValid={formState.inputs.description.isValid}
+          />
+          <Button type="submit" disabled={!formState.isValid}>
+            UPDATE PLACE
+          </Button>
+        </form>
+        <ErrorModal error={error} onClear={clearErrorHandler} />
+      </React.Fragment>
     ) : (
       <Card className="center">
-        <h2>Loading...</h2>
+        <LoadingSpinner asOverlay />
       </Card>
     )
   ) : (
