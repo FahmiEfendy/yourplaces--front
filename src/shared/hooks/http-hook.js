@@ -32,12 +32,12 @@ const useHttpRequest = () => {
         setIsLoading(false);
         return responseData;
       } catch (err) {
-        setIsLoading(false);
         setError(err.message || "Something went wrong, please try again.");
-        throw error;
+        setIsLoading(false);
+        throw err;
       }
     },
-    [error]
+    []
   );
 
   const clearErrorHandler = () => {
