@@ -1,11 +1,14 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 
 import UserList from "../components/UserList";
 import useHttpRequest from "../../shared/hooks/http-hook";
+import { AuthContext } from "../../shared/context/auth-context";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const Users = () => {
+  const auth = useContext(AuthContext);
+
   const [userList, setUserList] = useState([]);
   const { isLoading, error, sendRequest, clearErrorHandler } = useHttpRequest();
 
@@ -16,13 +19,18 @@ const Users = () => {
           "http://localhost:5000/api/users"
         );
         setUserList(responseData.data);
+
+        // Remove logged user from ALL USERS
+        setUserList((prevUserList) =>
+          prevUserList.filter((user) => user.id !== auth.userId)
+        );
       } catch (err) {
         console.log(err);
       }
     };
 
     fetchRequest();
-  }, [sendRequest]);
+  }, [auth.userId, sendRequest]);
 
   return (
     <React.Fragment>
