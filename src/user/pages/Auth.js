@@ -9,6 +9,7 @@ import Input from "../../shared/components/FormElements/Input";
 import { AuthContext } from "../../shared/context/auth-context";
 import Button from "../../shared/components/FormElements/Button";
 import ErrorModal from "../../shared/components/UIElements/ErrorModal";
+import ImageUpload from "../../shared/components/FormElements/ImageUpload";
 import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 import {
   VALIDATOR_EMAIL,
@@ -39,12 +40,16 @@ const Auth = () => {
   const toggleLoginModeHandler = () => {
     if (!isLoginMode) {
       setFormData(
-        { ...formState.inputs, name: undefined },
+        { ...formState.inputs, name: undefined, image: undefined },
         formState.inputs.email.isValid && formState.inputs.password.isValid
       );
     } else {
       setFormData(
-        { ...formState.inputs, name: { value: "", isValid: false } },
+        {
+          ...formState.inputs,
+          name: { value: "", isValid: false },
+          image: { value: null, isValid: false },
+        },
         false
       );
     }
@@ -105,14 +110,17 @@ const Auth = () => {
         <hr />
         <form onSubmit={formSubmitHandler}>
           {!isLoginMode && (
-            <Input
-              id="name"
-              type="text"
-              label="Name"
-              errorText="Please enter a valid name!"
-              validators={[VALIDATOR_REQUIRE]}
-              onInput={inputChangeHandler}
-            ></Input>
+            <React.Fragment>
+              <Input
+                id="name"
+                type="text"
+                label="Name"
+                errorText="Please enter a valid name!"
+                validators={[VALIDATOR_REQUIRE]}
+                onInput={inputChangeHandler}
+              />
+              <ImageUpload center id="image" onInput={inputChangeHandler} />
+            </React.Fragment>
           )}
           <Input
             id="email"
