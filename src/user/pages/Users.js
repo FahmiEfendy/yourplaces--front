@@ -31,7 +31,7 @@ const Users = () => {
           <LoadingSpinner asOverlay />
         </div>
       )}
-      <ErrorModal error={error} onCancel={clearErrorHandler} />
+      <ErrorModal error={error} onClear={clearErrorHandler} />
       <UserList items={userList} />
     </React.Fragment>
   );
