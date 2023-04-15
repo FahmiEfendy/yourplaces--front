@@ -29,7 +29,7 @@ const PlaceItem = (props) => {
   const confirmDeleteHandler = async () => {
     try {
       await sendRequest(
-        `http://localhost:5000/api/places/${props.id}`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${props.id}`,
         "DELETE",
         {
           Authorization: `Bearer ${auth.userToken}`,
@@ -83,7 +83,7 @@ const PlaceItem = (props) => {
         <Card className="place-item__content">
           <div className="place-item__image">
             <img
-              src={`http://localhost:5000/${props.imageUrl}`}
+              src={`${process.env.REACT_APP_ASSET_URL}/${props.imageUrl}`}
               alt="props.title"
             />
           </div>
