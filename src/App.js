@@ -1,3 +1,4 @@
+import React, { Suspense } from "react";
 import {
   BrowserRouter as Router,
   Navigate,
@@ -5,14 +6,22 @@ import {
   Routes,
 } from "react-router-dom";
 
-import Auth from "./user/pages/Auth";
-import Users from "./user/pages/Users";
-import NewPlace from "./places/pages/NewPlace";
+// import Auth from "./user/pages/Auth";
+// import Users from "./user/pages/Users";
+// import NewPlace from "./places/pages/NewPlace";
+// import UserPlace from "./places/pages/UserPlace";
+// import UpdatePlace from "./places/pages/UpdatePlace";
+
 import useAuth from "./shared/hooks/auth-hook";
-import UserPlace from "./places/pages/UserPlace";
-import UpdatePlace from "./places/pages/UpdatePlace";
 import { AuthContext } from "./shared/context/auth-context";
 import MainNavigation from "./shared/components/Navigation/MainNavigation";
+import LoadingSpinner from "./shared/components/UIElements/LoadingSpinner";
+
+const Auth = React.lazy(() => import("./user/pages/Auth"));
+const Users = React.lazy(() => import("./user/pages/Users"));
+const NewPlace = React.lazy(() => import("./places/pages/NewPlace"));
+const UserPlace = React.lazy(() => import("./places/pages/UserPlace"));
+const UpdatePlace = React.lazy(() => import("./places/pages/UpdatePlace"));
 
 function App() {
   const { userId, userToken, login, logout } = useAuth();
@@ -24,22 +33,30 @@ function App() {
       <Router>
         <MainNavigation></MainNavigation>
         <main>
-          {userToken ? (
-            <Routes>
-              <Route path="/" exact element={<Users />} />
-              <Route path="/:userId/places" exact element={<UserPlace />} />
-              <Route path="/place/new" exact element={<NewPlace />} />
-              <Route path="/place/:placeId" exact element={<UpdatePlace />} />
-              <Route path="*" element={<Navigate to="/" replace />} />
-            </Routes>
-          ) : (
-            <Routes>
-              <Route path="/" exact element={<Users />} />
-              <Route path="/:userId/places" exact element={<UserPlace />} />
-              <Route path="/auth" exact element={<Auth />} />
-              <Route path="*" element={<Navigate to="/auth" replace />} />
-            </Routes>
-          )}
+          <Suspense
+            fallback={
+              <div className="center">
+                <LoadingSpinner />
+              </div>
+            }
+          >
+            {userToken ? (
+              <Routes>
+                <Route path="/" exact element={<Users />} />
+                <Route path="/:userId/places" exact element={<UserPlace />} />
+                <Route path="/place/new" exact element={<NewPlace />} />
+                <Route path="/place/:placeId" exact element={<UpdatePlace />} />
+                <Route path="*" element={<Navigate to="/" replace />} />
+              </Routes>
+            ) : (
+              <Routes>
+                <Route path="/" exact element={<Users />} />
+                <Route path="/:userId/places" exact element={<UserPlace />} />
+                <Route path="/auth" exact element={<Auth />} />
+                <Route path="*" element={<Navigate to="/auth" replace />} />
+              </Routes>
+            )}
+          </Suspense>
         </main>
       </Router>
     </AuthContext.Provider>
