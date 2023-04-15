@@ -55,7 +55,7 @@ const NewPlace = () => {
       await sendRequest(
         "http://localhost:5000/api/places/",
         "POST",
-        {},
+        { Authorization: `Bearer ${auth.userToken}` },
         formData
       );
 

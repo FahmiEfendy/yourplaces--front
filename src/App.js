@@ -16,24 +16,26 @@ import MainNavigation from "./shared/components/Navigation/MainNavigation";
 
 function App() {
   const [userId, setUserId] = useState(null);
-  const [isLogin, setIsLogin] = useState(false);
+  const [userToken, setUserToken] = useState(null);
 
-  const login = useCallback((userId) => {
-    setUserId(userId);
-    setIsLogin(true);
+  const login = useCallback((id, token) => {
+    setUserId(id);
+    setUserToken(token);
   }, []);
 
   const logout = useCallback(() => {
     setUserId(null);
-    setIsLogin(false);
+    setUserToken(null);
   }, []);
 
   return (
-    <AuthContext.Provider value={{ isLogin, userId, login, logout }}>
+    <AuthContext.Provider
+      value={{ isLogin: !!userToken, userId, userToken, login, logout }}
+    >
       <Router>
         <MainNavigation></MainNavigation>
         <main>
-          {isLogin ? (
+          {userToken ? (
             <Routes>
               <Route path="/" exact element={<Users />} />
               <Route path="/:userId/places" exact element={<UserPlace />} />

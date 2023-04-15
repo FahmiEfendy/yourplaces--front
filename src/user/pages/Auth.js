@@ -74,7 +74,7 @@ const Auth = () => {
           })
         );
 
-        auth.login(responseData.data.id);
+        auth.login(responseData.data.userId, responseData.data.token);
       } catch (err) {
         // This catch err can be removed
         console.log(err);
@@ -94,7 +94,7 @@ const Auth = () => {
           formData
         );
 
-        auth.login(responseData.data.id);
+        auth.login(responseData.data.userId, responseData.data.token);
       } catch (err) {
         console.log(err.message);
       }
