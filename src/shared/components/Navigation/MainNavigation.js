@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 
 import "./MainNavigation.css";
 import NavLinks from "./NavLinks";
@@ -8,6 +8,8 @@ import SideDrawer from "./SideDrawer";
 import Backdrop from "../UIElements/Backdrop";
 
 const MainNavigation = () => {
+  const location = useLocation();
+
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   const openDrawerHandler = () => {
@@ -16,6 +18,10 @@ const MainNavigation = () => {
 
   const closeDrawerHandler = () => {
     setIsDrawerOpen(false);
+  };
+
+  const reloadPageHandler = () => {
+    if (location.pathname === "/") window.location.reload(true);
   };
 
   return (
@@ -36,7 +42,9 @@ const MainNavigation = () => {
           <span></span>
         </button>
         <h1 className="main-navigation__title">
-          <Link to="/">YourPlaces</Link>
+          <Link to="/" onClick={reloadPageHandler}>
+            YourPlaces
+          </Link>
         </h1>
         <nav className="main-navigation__header-nav">
           <NavLinks />
