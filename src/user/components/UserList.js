@@ -3,15 +3,18 @@ import UserItem from "./UserItem";
 import Card from "../../shared/components/UIElements/Card";
 
 const UserList = (props) => {
-  if (props.items.length === 0) {
-    return (
-      <div className="center">
-        <Card>
-          <h2>No User Found!</h2>
-        </Card>
-      </div>
-    );
-  }
+  // Hide No user found when first fetch
+  setTimeout(() => {
+    if (props.items.length === 0) {
+      return (
+        <div className="center">
+          <Card>
+            <h2>No User Found!</h2>
+          </Card>
+        </div>
+      );
+    }
+  }, 0);
 
   return (
     <ul className="users-list">
