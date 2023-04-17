@@ -58,7 +58,8 @@ const NewPlace = () => {
         formData
       );
 
-      navigate("/");
+      const { id } = JSON.parse(localStorage.getItem("userData"));
+      navigate(`/${id}/places`);
     } catch (err) {
       console.log(err);
     }
