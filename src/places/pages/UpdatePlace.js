@@ -77,7 +77,7 @@ const UpdatePlace = () => {
 
     try {
       await sendRequest(
-        `${process.env.REACT_API_BACKEND_URL}/places/${placeId}`,
+        `${process.env.REACT_APP_BACKEND_URL}/places/${placeId}`,
         "PATCH",
         {
           "Content-Type": "application/json",
@@ -95,8 +95,18 @@ const UpdatePlace = () => {
     }
   };
 
-  return selectedPlace && !error ? (
-    !isLoading ? (
+  if (isLoading) return <LoadingSpinner asOverlay />;
+
+  if (!selectedPlace) {
+    return (
+      <Card className="center">
+        <h2>No Place Found!</h2>
+      </Card>
+    );
+  }
+
+  return (
+    !error && (
       <React.Fragment>
         <form className="place-form" onSubmit={formSubmitHandler}>
           <Input
@@ -126,15 +136,7 @@ const UpdatePlace = () => {
         </form>
         <ErrorModal error={error} onClear={clearErrorHandler} />
       </React.Fragment>
-    ) : (
-      <Card className="center">
-        <LoadingSpinner asOverlay />
-      </Card>
     )
-  ) : (
-    <Card className="center">
-      <h2>No Place Found!</h2>
-    </Card>
   );
 };
 
