@@ -34,13 +34,14 @@ const Users = () => {
 
   return (
     <React.Fragment>
-      {isLoading && (
+      {isLoading ? (
         <div className="center">
           <LoadingSpinner asOverlay />
         </div>
+      ) : (
+        <UserList items={userList} />
       )}
       <ErrorModal error={error} onClear={clearErrorHandler} />
-      <UserList items={userList} />
     </React.Fragment>
   );
 };
