@@ -7,15 +7,22 @@ import Button from "../../shared/components/FormElements/Button";
 
 const PlaceList = (props) => {
   const { userId } = useParams();
-  const { id } = JSON.parse(localStorage.getItem("userData"));
+  const userData = JSON.parse(localStorage.getItem("userData"));
 
   return props.items.length === 0 ? (
     <div className="place-list center">
-      {userId === id ? (
-        <Card>
-          <h2>No Places Found! Maybe Create One?</h2>
-          <Button to="/place/new">SHARE PLACE</Button>
-        </Card>
+      {userData ? (
+        userId === userData.id ? (
+          <Card>
+            <h2>No Places Found! Maybe Create One?</h2>
+            <Button to="/place/new">SHARE PLACE</Button>
+          </Card>
+        ) : (
+          <Card>
+            <h2>This user doesn't have a place yet.</h2>
+            <Button to="/">BACK TO HOMEPAGE</Button>
+          </Card>
+        )
       ) : (
         <Card>
           <h2>This user doesn't have a place yet.</h2>
