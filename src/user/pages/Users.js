@@ -19,11 +19,6 @@ const Users = () => {
           `${process.env.REACT_APP_BACKEND_URL}/users`
         );
         setUserList(responseData.data);
-
-        // Remove logged user from ALL USERS
-        setUserList((prevUserList) =>
-          prevUserList.filter((user) => user.id !== auth.userId)
-        );
       } catch (err) {
         console.log(err);
       }
