@@ -2,6 +2,7 @@ import React, { useContext, useState } from "react";
 
 import "./PlaceItem.css";
 import Map from "../../shared/components/UIElements/Map";
+import useFetchImage from "../../shared/hooks/image-hook";
 import useHttpRequest from "../../shared/hooks/http-hook";
 import Card from "../../shared/components/UIElements/Card";
 import Modal from "../../shared/components/UIElements/Modal";
@@ -12,6 +13,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
+  const { imageUrl } = useFetchImage(`places/${props.imageUrl}`);
 
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
@@ -82,10 +84,7 @@ const PlaceItem = (props) => {
       <li className="place-item">
         <Card className="place-item__content">
           <div className="place-item__image">
-            <img
-              src={`${process.env.REACT_APP_ASSET_URL}/${props.imageUrl}`}
-              alt={props.title}
-            />
+            <img src={imageUrl} alt={props.title} />
           </div>
           <div className="place-item__info">
             <h2>{props.title}</h2>

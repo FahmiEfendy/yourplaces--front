@@ -1,19 +1,19 @@
 import { Link } from "react-router-dom";
 
 import "./UserItem.css";
+import useFetchImage from "../../shared/hooks/image-hook";
 import Card from "../../shared/components/UIElements/Card";
 import Avatar from "../../shared/components/UIElements/Avatar";
 
 const UserItem = (props) => {
+  const { imageUrl } = useFetchImage(`users/${props.image}`);
+
   return (
     <li className="user-item">
       <Card className="user-item__content">
         <Link to={`/${props.id}/places`}>
           <div className="user-item__image">
-            <Avatar
-              image={`${process.env.REACT_APP_ASSET_URL}/${props.image}`}
-              alt={props.name}
-            />
+            <Avatar image={imageUrl} alt={props.name} />
           </div>
           <div className="user-item__info">
             <h2>{props.name}</h2>
