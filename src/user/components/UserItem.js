@@ -6,7 +6,7 @@ import Card from "../../shared/components/UIElements/Card";
 import Avatar from "../../shared/components/UIElements/Avatar";
 
 const UserItem = (props) => {
-  const { imageUrl } = useFetchImage(`users/${props.image}`);
+  const { imageUrl } = useFetchImage(props.image);
 
   return (
     <li className="user-item">

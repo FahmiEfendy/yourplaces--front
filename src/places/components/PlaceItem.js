@@ -13,7 +13,7 @@ import LoadingSpinner from "../../shared/components/UIElements/LoadingSpinner";
 
 const PlaceItem = (props) => {
   const auth = useContext(AuthContext);
-  const { imageUrl } = useFetchImage(`places/${props.imageUrl}`);
+  const { imageUrl } = useFetchImage(props.imageUrl);
 
   const [isMapOpen, setIsMapOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
